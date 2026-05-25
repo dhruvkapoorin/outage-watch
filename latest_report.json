@@ -1,0 +1,235 @@
+{
+  "generated_at": "2026-05-24T08:00:00+10:00",
+  "overall_status": "incidents_detected",
+  "summary": "Microsoft Azure Australia East (Sydney) experienced a significant outage due to a utility power surge/lightning storm, impacting Bank of Queensland and Jetstar (~99% recovery). Zscaler had a 23+ hour Admin UI and Client Connector disruption on May 18 (now resolved). Telstra and Optus are operational. Active ransomware (Dire Wolf, INC Ransom) and APT28 campaign (Operation Neusploit) pose threats to Australian infrastructure, alongside 5 active ACSC advisories.",
+  "vendors": [
+    {
+      "name": "Microsoft Azure",
+      "status": "degraded",
+      "icon": "☁️",
+      "description": "Australia East (Sydney) datacenter suffered a utility power surge/lightning storm causing cooling failures. Microsoft proactively powered down compute and storage. Bank of Queensland (BOQ) and Jetstar affected. ~99% storage and VMs recovered. Separate incident May 18: Microsoft Fabric/Power BI degraded across multiple regions. May Patch Tuesday: 132 patches including CVSS 10 Azure DevOps flaw and critical Azure Cassandra RCEs.",
+      "source_url": "https://azure.status.microsoft/en-us/status"
+    },
+    {
+      "name": "AWS",
+      "status": "operational",
+      "icon": "🟠",
+      "description": "No reported outages or incidents in ap-southeast-2 (Sydney) during the past 24-48 hours. AWS Amplify and core services showing OK status.",
+      "source_url": "https://health.aws.amazon.com/health/status"
+    },
+    {
+      "name": "Zscaler",
+      "status": "degraded",
+      "icon": "🛡️",
+      "description": "May 18 incident: Admin UI and Zscaler Client Connector Admin on zscalerthree.net disrupted for 23+ hours (resolved). Additional May incidents: Amsterdam II datacenter (May 16), IPsec Tunnel connectivity (May 15), India datacenters (May 12). APT28 actively exploiting CVE-2026-21509 in Microsoft Office (Operation Neusploit) per Zscaler ThreatLabz research.",
+      "source_url": "https://trust.zscaler.com"
+    },
+    {
+      "name": "Telstra",
+      "status": "operational",
+      "icon": "📡",
+      "description": "No major confirmed network outages today. StatusGator reports operational. Approximately 12 user-submitted reports in past 24 hours suggest minor localised disruptions only.",
+      "source_url": "https://www.telstra.com.au/support/network-noticeboards"
+    },
+    {
+      "name": "Optus",
+      "status": "operational",
+      "icon": "📶",
+      "description": "No incidents reported May 19-24. Optus SMS and core network operational. National outage register shows no active major disruptions.",
+      "source_url": "https://www.optus.com.au/support/network-status"
+    }
+  ],
+  "outages": [
+    {
+      "title": "Azure Australia East - Power Surge / Cooling Failure",
+      "vendor": "Microsoft Azure",
+      "severity": "high",
+      "status": "mostly_resolved",
+      "detail": "Lightning storm struck Sydney datacenter chiller plant causing cooling units to fail. Microsoft proactively powered down compute and storage. ~99% of storage and VMs restored. Impacted customers include Bank of Queensland (BOQ) and Jetstar.",
+      "source_url": "https://www.datacenterdynamics.com/en/news/oracle-cloud-netsuite-and-azure-face-outages-in-sydney-australia/"
+    },
+    {
+      "title": "Microsoft Fabric / Power BI - Degraded Performance",
+      "vendor": "Microsoft Azure",
+      "severity": "medium",
+      "status": "resolved",
+      "detail": "Degraded performance across multiple regions reported on May 18, 2026. Incident resolved.",
+      "source_url": "https://azure.status.microsoft/en-us/status/history/"
+    },
+    {
+      "title": "Zscaler Admin UI & Client Connector Outage",
+      "vendor": "Zscaler",
+      "severity": "high",
+      "status": "resolved",
+      "detail": "zscalerthree.net cloud experienced 23+ hour Admin UI and Client Connector Admin disruption from ~15:16 UTC May 18. Users experienced intermittent timeouts and device registration failures. Fully restored.",
+      "source_url": "https://trust.zscaler.com"
+    }
+  ],
+  "cyber_threats": [
+    {
+      "title": "APT28 Operation Neusploit - CVE-2026-21509 Active Exploitation",
+      "severity": "critical",
+      "detail": "Russian state-sponsored APT28 leveraging CVE-2026-21509 via weaponised RTF files targeting organisations. Zscaler ThreatLabz tracking as Operation Neusploit. Patch Microsoft Office immediately.",
+      "source_url": "https://www.zscaler.com/blogs/security-research/apt28-leverages-cve-2026-21509-operation-neusploit"
+    },
+    {
+      "title": "Legal Practice Board WA - Dire Wolf Ransomware Attack",
+      "severity": "high",
+      "detail": "Legal Practice Board of Western Australia confirmed Dire Wolf ransomware attack. Online systems taken offline including board services.",
+      "source_url": "https://www.cyberdaily.au/news"
+    },
+    {
+      "title": "INC Ransom Ransomware Group - AU/NZ/Pacific Targeting",
+      "severity": "high",
+      "detail": "ACSC advisory: INC Ransom ransomware group and affiliate network actively targeting Australian, New Zealand, and Pacific island networks.",
+      "source_url": "https://www.cyber.gov.au/about-us/view-all-content/alerts-and-advisories"
+    },
+    {
+      "title": "Australian Human Rights Commission Data Breach",
+      "severity": "medium",
+      "detail": "Over 600 submissions to the AHRC accidentally disclosed online between early April and May 2026.",
+      "source_url": "https://www.webberinsurance.com.au/data-breaches-list"
+    },
+    {
+      "title": "ClickFix Social Engineering via Compromised WordPress Sites",
+      "severity": "medium",
+      "detail": "ACSC warns threat actors using ClickFix technique to distribute malware through compromised WordPress websites targeting Australian networks.",
+      "source_url": "https://www.cyber.gov.au/about-us/view-all-content/alerts-and-advisories"
+    },
+    {
+      "title": "Online Code Repository Secrets Exfiltration",
+      "severity": "medium",
+      "detail": "ACSC alert: Increased threat actor activity targeting online code repositories to extract secrets, access private codebases, and inject malicious packages.",
+      "source_url": "https://www.cyber.gov.au/about-us/view-all-content/alerts-and-advisories"
+    }
+  ],
+  "cves": [
+    {
+      "id": "CVE-2026-42826",
+      "vendor": "Microsoft",
+      "product": "Azure DevOps",
+      "cvss": 10.0,
+      "severity": "critical",
+      "description": "Unauthenticated remote information disclosure vulnerability in Azure DevOps. CVSS 10. Patch Tuesday May 2026.",
+      "source_url": "https://zecurit.com/endpoint-management/patch-tuesday/"
+    },
+    {
+      "id": "CVE-2026-33109",
+      "vendor": "Microsoft",
+      "product": "Azure Managed Instance for Apache Cassandra",
+      "cvss": 9.9,
+      "severity": "critical",
+      "description": "Improper access control allowing low-privileged remote attackers to execute arbitrary code (RCE).",
+      "source_url": "https://www.crowdstrike.com/en-us/blog/patch-tuesday-analysis-may-2026/"
+    },
+    {
+      "id": "CVE-2026-33844",
+      "vendor": "Microsoft",
+      "product": "Azure Managed Instance for Apache Cassandra",
+      "cvss": 9.0,
+      "severity": "critical",
+      "description": "Improper input validation allowing RCE by low-privileged remote attackers.",
+      "source_url": "https://www.crowdstrike.com/en-us/blog/patch-tuesday-analysis-may-2026/"
+    },
+    {
+      "id": "CVE-2026-21509",
+      "vendor": "Microsoft",
+      "product": "Microsoft Office (RTF)",
+      "cvss": 8.1,
+      "severity": "high",
+      "description": "Actively exploited by APT28 (Operation Neusploit) via weaponised RTF files delivering backdoor malware.",
+      "source_url": "https://www.zscaler.com/blogs/security-research/apt28-leverages-cve-2026-21509-operation-neusploit"
+    },
+    {
+      "id": "CVE-2026-40361",
+      "vendor": "Microsoft",
+      "product": "Microsoft Office / Word",
+      "cvss": 8.8,
+      "severity": "high",
+      "description": "RCE vulnerability exploitable via Preview Pane. Expected to be exploited within 30 days.",
+      "source_url": "https://www.sophos.com/en-us/blog/may-patch-tuesday-hauls-out-132-cves"
+    },
+    {
+      "id": "CVE-2026-40364",
+      "vendor": "Microsoft",
+      "product": "Microsoft Office / Word",
+      "cvss": 8.8,
+      "severity": "high",
+      "description": "RCE vulnerability exploitable via Preview Pane. Expected to be exploited within 30 days.",
+      "source_url": "https://www.sophos.com/en-us/blog/may-patch-tuesday-hauls-out-132-cves"
+    },
+    {
+      "id": "CVE-2026-4194",
+      "vendor": "cPanel",
+      "product": "cPanel / WebHost Manager",
+      "cvss": 9.3,
+      "severity": "critical",
+      "description": "Active exploitation of cPanel/WHM administration interfaces. ACSC advisory published.",
+      "source_url": "https://www.cyber.gov.au/about-us/view-all-content/alerts-and-advisories"
+    },
+    {
+      "id": "CVE-2026-20127",
+      "vendor": "Cisco",
+      "product": "Cisco SD-WAN",
+      "cvss": null,
+      "severity": "high",
+      "description": "Actively exploited Cisco SD-WAN vulnerability. ACSC mitigation advisory published.",
+      "source_url": "https://www.cyber.gov.au/about-us/view-all-content/alerts-and-advisories/exploitation-of-cisco-sd-wan-appliances"
+    },
+    {
+      "id": "CVE-2026-20128",
+      "vendor": "Cisco",
+      "product": "Cisco SD-WAN",
+      "cvss": null,
+      "severity": "high",
+      "description": "Actively exploited Cisco SD-WAN vulnerability. ACSC mitigation advisory published.",
+      "source_url": "https://www.cyber.gov.au/about-us/view-all-content/alerts-and-advisories/exploitation-of-cisco-sd-wan-appliances"
+    },
+    {
+      "id": "CVE-2026-20122",
+      "vendor": "Cisco",
+      "product": "Cisco SD-WAN",
+      "cvss": null,
+      "severity": "high",
+      "description": "Actively exploited Cisco SD-WAN vulnerability. ACSC mitigation advisory published.",
+      "source_url": "https://www.cyber.gov.au/about-us/view-all-content/alerts-and-advisories/exploitation-of-cisco-sd-wan-appliances"
+    }
+  ],
+  "government_advisories": [
+    {
+      "title": "Exploitation of cPanel/WebHost Manager (CVE-2026-4194)",
+      "issuer": "ACSC",
+      "severity": "high",
+      "detail": "Active exploitation of vulnerability in cPanel/WHM administration control interfaces. Patch immediately.",
+      "url": "https://www.cyber.gov.au/about-us/view-all-content/alerts-and-advisories"
+    },
+    {
+      "title": "INC Ransom Ransomware Group Targeting AU/NZ/Pacific",
+      "issuer": "ACSC",
+      "severity": "high",
+      "detail": "INC Ransom ransomware group and affiliate operations targeting Australian, New Zealand, and Pacific island networks.",
+      "url": "https://www.cyber.gov.au/about-us/view-all-content/alerts-and-advisories"
+    },
+    {
+      "title": "Cisco SD-WAN Exploitation (CVE-2026-20127, 20128, 20122)",
+      "issuer": "ACSC",
+      "severity": "high",
+      "detail": "Ongoing active exploitation of Cisco SD-WAN appliances. Mitigations published. Apply patches immediately.",
+      "url": "https://www.cyber.gov.au/about-us/view-all-content/alerts-and-advisories/exploitation-of-cisco-sd-wan-appliances"
+    },
+    {
+      "title": "ClickFix Malware Distribution via Compromised WordPress Sites",
+      "issuer": "ACSC",
+      "severity": "medium",
+      "detail": "Threat actors using ClickFix social engineering to distribute malware targeting Australian networks via compromised WordPress sites.",
+      "url": "https://www.cyber.gov.au/about-us/view-all-content/alerts-and-advisories"
+    },
+    {
+      "title": "Online Code Repository Secrets Exfiltration",
+      "issuer": "ACSC",
+      "severity": "medium",
+      "detail": "Increased threat actor activity targeting code repositories to extract secrets and perform supply-chain attacks.",
+      "url": "https://www.cyber.gov.au/about-us/view-all-content/alerts-and-advisories"
+    }
+  ]
+}
