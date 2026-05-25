@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<title>AU Outage Watch</title>
+
+<!-- iPhone home-screen / PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Outage Watch">
+<meta name="theme-color" content="#0c1322">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+<link rel="manifest" href="manifest.json">
+
+<style>
+  :root{
+    --bg:#0c1322; --bg2:#111c33; --card:#16223d; --card-press:#1d2c4d;
+    --text:#eef2fb; --muted:#8b9bc2; --line:#243352;
+    --red:#ff5a6e; --blue:#4f9dff; --purple:#9b7bff; --teal:#33d6c0; --amber:#ffb648;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Segoe UI,Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  body{min-height:100vh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);}
+  .wrap{max-width:560px;margin:0 auto;padding:18px 16px 40px;}
+
+  /* Header */
+  header{padding:14px 4px 8px;}
+  .title{font-size:26px;font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:9px;}
+  .title .badge{width:11px;height:11px;border-radius:50%;background:var(--teal);
+    box-shadow:0 0 0 4px rgba(51,214,192,.18);}
+  .sub{color:var(--muted);font-size:13.5px;margin-top:3px;}
+  .clock{margin-top:14px;background:linear-gradient(135deg,var(--bg2),var(--card));
+    border:1px solid var(--line);border-radius:14px;padding:12px 14px;
+    display:flex;justify-content:space-between;align-items:center;}
+  .clock .lbl{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.8px;}
+  .clock .val{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;}
+
+  /* Section */
+  .section-h{display:flex;align-items:center;gap:8px;margin:24px 4px 10px;}
+  .section-h .dot{width:7px;height:7px;border-radius:50%;}
+  .section-h h2{font-size:12.5px;font-weight:700;letter-spacing:1px;
+    text-transform:uppercase;color:var(--muted);}
+
+  /* Cards */
+  .card{display:flex;align-items:center;gap:13px;background:var(--card);
+    border:1px solid var(--line);border-radius:15px;padding:14px;margin-bottom:9px;
+    text-decoration:none;color:inherit;cursor:pointer;
+    transition:background .12s ease,transform .08s ease;}
+  .card:active{background:var(--card-press);transform:scale(.985);}
+  .ico{width:42px;height:42px;border-radius:11px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;}
+  .meta{flex:1;min-width:0;}
+  .meta .nm{font-size:15.5px;font-weight:700;}
+  .meta .ds{font-size:12.5px;color:var(--muted);margin-top:2px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
+  .chev{color:var(--muted);font-size:18px;line-height:1;}
+  .seen{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .seen.fresh{color:var(--teal);}
+
+  /* Accent variants */
+  .c-red .ico{background:rgba(255,90,110,.15);color:var(--red);}
+  .c-blue .ico{background:rgba(79,157,255,.15);color:var(--blue);}
+  .c-purple .ico{background:rgba(155,123,255,.15);color:var(--purple);}
+  .c-teal .ico{background:rgba(51,214,192,.15);color:var(--teal);}
+
+  footer{margin-top:26px;padding:16px;background:var(--bg2);border:1px solid var(--line);
+    border-radius:14px;color:var(--muted);font-size:12px;line-height:1.6;}
+  footer b{color:var(--text);}
+  .tipbtn{margin-top:10px;display:inline-block;color:var(--blue);
+    font-size:12px;font-weight:600;text-decoration:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="title"><span class="badge"></span>AU Outage Watch</div>
+    <div class="sub">Cyber &amp; network status for Australian infrastructure</div>
+    <div class="clock">
+      <div>
+        <div class="lbl">Current time</div>
+        <div class="val" id="clock">—</div>
+      </div>
+      <div style="text-align:right">
+        <div class="lbl">Sydney / AEST</div>
+        <div class="val" id="day">—</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sections rendered by JS -->
+  <div id="board"></div>
+
+  <footer>
+    <b>How to use:</b> tap any service to open its official status page in Safari.
+    A green time appears when you've just checked a source.<br><br>
+    <b>Add to your iPhone:</b> open this page in Safari → tap the Share icon →
+    <b>Add to Home Screen</b>. It then opens full-screen like an app.<br>
+    <a class="tipbtn" id="resetBtn">Clear "last checked" history</a>
+  </footer>
+
+</div>
+
+<script>
+/* ---- Data: curated, verified Australian-relevant outage sources ---- */
+const DATA = [
+  { group:"Your priority", color:"var(--red)", cls:"c-red", items:[
+    { id:"telstra", nm:"Telstra", ds:"Mobile & NBN outages by address",
+      ic:"T", url:"https://www.telstra.com.au/outages" },
+    { id:"optus", nm:"Optus", ds:"Network service status & incidents",
+      ic:"O", url:"https://www.optus.com.au/living-network/service-status" },
+  ]},
+  { group:"Connectivity & telco", color:"var(--blue)", cls:"c-blue", items:[
+    { id:"nbn", nm:"nbn", ds:"National broadband network status",
+      ic:"N", url:"https://www.nbnco.com.au/support/network-status" },
+    { id:"vodafone", nm:"Vodafone / TPG", ds:"TPG Telecom network status checker",
+      ic:"V", url:"https://www.vodafone.com.au/network/upgrades" },
+    { id:"downdetector", nm:"Downdetector AU", ds:"Live crowd-sourced outage reports",
+      ic:"◉", url:"https://downdetector.com.au/" },
+    { id:"aussieoutages", nm:"Aussie Outages", ds:"Australia-wide outage tracker",
+      ic:"⚠", url:"https://aussieoutages.com/" },
+  ]},
+  { group:"Cloud & SaaS", color:"var(--purple)", cls:"c-purple", items:[
+    { id:"m365", nm:"Microsoft 365", ds:"Service health for M365 apps",
+      ic:"M", url:"https://status.cloud.microsoft/m365/" },
+    { id:"azure", nm:"Microsoft Azure", ds:"Azure status – Australia regions",
+      ic:"A", url:"https://azure.status.microsoft/en-us/status" },
+    { id:"aws", nm:"Amazon AWS", ds:"AWS Health – ap-southeast (Sydney)",
+      ic:"a", url:"https://health.aws.amazon.com/health/status" },
+    { id:"gcp", nm:"Google Cloud", ds:"GCP service health dashboard",
+      ic:"G", url:"https://status.cloud.google.com/" },
+  ]},
+  { group:"Security & network", color:"var(--teal)", cls:"c-teal", items:[
+    { id:"zscaler", nm:"Zscaler", ds:"Trust portal – cloud & ZIA/ZPA status",
+      ic:"Z", url:"https://trust.zscaler.com/" },
+    { id:"cloudflare", nm:"Cloudflare", ds:"Global edge & network status",
+      ic:"C", url:"https://www.cloudflarestatus.com/" },
+    { id:"crowdstrike", nm:"CrowdStrike", ds:"Falcon platform status & advisories",
+      ic:"◈", url:"https://status.crowdstrike.com/" },
+  ]},
+];
+
+/* ---- "Last checked" memory (works once added to Home Screen) ---- */
+let seen = {};
+try { seen = JSON.parse(localStorage.getItem("ow_seen")||"{}"); } catch(e){ seen = {}; }
+
+function ago(ts){
+  const m = Math.floor((Date.now()-ts)/60000);
+  if (m < 1) return "just now";
+  if (m < 60) return m+"m ago";
+  const h = Math.floor(m/60);
+  if (h < 24) return h+"h ago";
+  return Math.floor(h/24)+"d ago";
+}
+
+function render(){
+  const board = document.getElementById("board");
+  board.innerHTML = "";
+  DATA.forEach(sec=>{
+    const h = document.createElement("div");
+    h.className = "section-h";
+    h.innerHTML = '<span class="dot" style="background:'+sec.color+'"></span><h2>'+sec.group+'</h2>';
+    board.appendChild(h);
+    sec.items.forEach(it=>{
+      const a = document.createElement("a");
+      a.className = "card "+sec.cls;
+      a.href = it.url; a.target = "_blank"; a.rel = "noopener";
+      const ts = seen[it.id];
+      const fresh = ts && (Date.now()-ts) < 600000;
+      a.innerHTML =
+        '<div class="ico">'+it.ic+'</div>'+
+        '<div class="meta"><div class="nm">'+it.nm+'</div>'+
+        '<div class="ds">'+it.ds+'</div></div>'+
+        '<div class="right"><span class="chev">›</span>'+
+        (ts?'<span class="seen'+(fresh?' fresh':'')+'">'+ago(ts)+'</span>':'')+'</div>';
+      a.addEventListener("click", ()=>{
+        seen[it.id] = Date.now();
+        try { localStorage.setItem("ow_seen", JSON.stringify(seen)); } catch(e){}
+        setTimeout(render, 60);
+      });
+      board.appendChild(a);
+    });
+  });
+}
+
+/* ---- Clock (Australian Eastern Time) ---- */
+function tick(){
+  const now = new Date();
+  const opts = { timeZone:"Australia/Sydney" };
+  document.getElementById("clock").textContent =
+    now.toLocaleTimeString("en-AU", {...opts, hour:"2-digit", minute:"2-digit", second:"2-digit"});
+  document.getElementById("day").textContent =
+    now.toLocaleDateString("en-AU", {...opts, weekday:"short", day:"numeric", month:"short"});
+}
+
+document.getElementById("resetBtn").addEventListener("click", ()=>{
+  seen = {};
+  try { localStorage.removeItem("ow_seen"); } catch(e){}
+  render();
+});
+
+render();
+tick();
+setInterval(tick, 1000);
+</script>
+</body>
+</html>
